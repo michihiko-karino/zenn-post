@@ -1,0 +1,23 @@
+{
+  "name": "zenn-post",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michihiko-karino/zenn-post.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michihiko-karino/zenn-post/issues"
+  },
+  "homepage": "https://github.com/michihiko-karino/zenn-post#readme",
+  "dependencies": {
+    "zenn-cli": "^0.1.57"
+  }
+}
