@@ -3,7 +3,7 @@ title: "[Nest.js]classベースなバリデーションで日本語エラーメ�
 emoji: "🗾"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['nestjs', 'classvalidator', 'classtransformer']
-published: false
+published: true
 ---
 
 ### 確認したversions
