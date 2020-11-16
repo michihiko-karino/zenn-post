@@ -1,9 +1,9 @@
 ---
-title: "[Nest.js]API全エンドポイントでライセンスプロパティを追加したかった時にしたこと"
+title: "[Nest.js]REST API全エンドポイントで帰属表示を追加したかった時にしたこと"
 emoji: "💭"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['nestjs', 'classvalidator', 'classtransformer']
-published: false
+published: true
 ---
 
 # やりたかったこと
