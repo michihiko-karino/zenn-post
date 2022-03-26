@@ -3,7 +3,7 @@ title: "vue composition apiにおけるpropsのリアクティブ性について
 emoji: "📝" # アイキャッチとして使われる絵文字（1文字だけ）
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: ["vue"] # タグ。["markdown", "rust", "aws"]のように指定する
-published: false # 公開設定（falseにすると下書き）
+published: true # 公開設定（falseにすると下書き）
 ---
 
 # この記事で伝えたいこと
@@ -12,7 +12,7 @@ published: false # 公開設定（falseにすると下書き）
 - `props`のプロパティにリアクティブ性を求めるパターンと求めないパターンごとの使い分け
 
 :::message
-**のような**という曖昧な表現にしているのは、挙動は似ているが同一のものか私には判断できないからです。
+**ような**という曖昧な表現にしているのは、挙動は似ているが同一のものか私には判断できないからです。
 :::
 
 # リアクティブをもたらすAPI `ref`, `reactive`, `computed`
@@ -60,7 +60,7 @@ const useLength = (name: string) => {
 };
 ```
 
-これらは分割代入によってリアクティブが消失しているといえますが、別の言い方をすると「`reactive`で定義された変数自体はリアクティブだが、そのプロパティはリアクティブではない」という表現もできるかなと思います。
+これらは分割代入によってリアクティブが消失しているといえますが、別の言い方をすると **「`reactive`で定義された変数自体はリアクティブだが、そのプロパティはリアクティブではない」** という表現もできるかなと思います。
 
 実験1: どんなタイプのプロパティでもリアクティブは消失する
 https://stackblitz.com/edit/vue-eysy8a?embed=1&file=src/App.vue&hideDevTools=1&hideExplorer=1&hideNavigation=1
@@ -77,8 +77,8 @@ https://stackblitz.com/edit/vue-kjypvk?embed=1&file=src/App.vue&hideDevTools=1&h
 例: propsは分割代入でリアクティブを失う
 https://stackblitz.com/edit/vue-cnb8my?embed=1&file=src/App.vue&hideDevTools=1&hideExplorer=1&hideNavigation=1
 
-上記実験1でのリンク先では`reactive`で作成した変数の分割代入された変数がリアクティブを失っているのと同じように、
-`props`のプロパティも分割代入によってリアクティブを失っています。
+上記実験1でのリンク先では`reactive`で作成した変数の分割代入された変数がリアクティブを失っているのと同じように、`props`のプロパティも分割代入によってリアクティブを失っています。
+このことから`props`も **`reactive`で定義された変数と同じような** リアクティブ性を持つと考えられます。
 
 # 本題2: `props`のプロパティにリアクティブを求めるパターンと求めないパターンの使い分け
 
@@ -87,7 +87,7 @@ https://stackblitz.com/edit/vue-cnb8my?embed=1&file=src/App.vue&hideDevTools=1&h
 
 ## `props`のプロパティにリアクティブを求めるパターン
 
-### `props`をそのまま使える場合はリアクティブ
+### `props`をそのまま使える場合はリアクティブのまま
 
 上記までで`props`のプロパティがリアクティブを失うパターンを見ましたが、いずれも分割代入の実行タイミングが`setup`の直下でした。
 分割代入の実行タイミングが変われば、その時のプロパティの値が取得できます。
@@ -128,7 +128,7 @@ https://stackblitz.com/edit/vue-rcqnny?embed=1&file=src/App.vue&hideNavigation=1
 この方法のメリットは`props`のプロパティを独立したリアクティブな変数として宣言できるところにあります。
 これを行うことでプロパティのみを`composable`なメソッドに与えロジックの分割ができるようになります。
 
-しかしTypeScriptを用いている場合、`toRefs`, `toRef`によって取得した変数は`Ref`型になり、`〇〇.value = △△`で型エラーになりません。
+しかしTypeScriptを用いている場合、`toRefs`, `toRef`によって取得した変数は`Ref`型になり、`〇〇.value = △△`で**型エラーになりません**。
 もしそのようなコードがある場合、実行時不具合になりエラーログではなくアラートログが出るだけなので、発見や修正が遅れるかも…しれません。ちょっと怖いですね。
 今後のVue自体のアップデートで対応されたり、もしかしたらLintの設定などで対処できるのか分かりませんが、一先ず注意ポイントですね。
 
@@ -150,7 +150,7 @@ export default {
 
 `computed`をおすすめする理由は２つあります。
 1つ目はTypeScript上では`ComputedRef`型になる点です。
-`ComputedRef`型はReadOnlyな型なので`〇〇.value = △△`で型エラーになります。実行前に不備を気づけるようになります。
+`ComputedRef`型はReadOnlyな型なので`〇〇.value = △△`で**型エラーになります**。実行前に不備を気づけるようになります。
 
 ２つ目は覚えるAPIの数を減らせるという点です。
 `computed`は便利な特性をもつので積極的に使い覚えたいAPIですが、`toRef`,`toRefs`は比較的使用頻度は高くないです。
@@ -178,7 +178,7 @@ https://stackblitz.com/edit/vue-qyqwmo?embed=1&file=src/Child.vue&hideDevTools=1
 
 # 最後に
 
-なぜこのような当たり前のような記事を書いたかというと、実は私は`props`がリアクティブじゃなくなる条件をよく分からないまま使っていたからです。
+なぜこのような当たり前のような記事を今更書いたかというと、実は私は`props`がリアクティブじゃなくなる条件をよく分からないまま使っていたからです。
 しかし考えてみれば`reactive`と同じような動きをすることに気づき、自分の鈍感さを痛感しました。
 あまり良くないロジックを量産していたような気がします。恥ずかしい〜
 
