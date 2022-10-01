@@ -3,7 +3,8 @@ title: "vue3で実装するFlashMessage（テストもあるよ）(typescriptだ
 emoji: "🔦"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["vue3", "vite", "vitest", "typescript"]
-published: false
+published: true
+published_at: 2022-10-02 10:00
 ---
 
 # 動機
@@ -17,7 +18,7 @@ vue3を利用してライブラリ単体でも実装しやすくて、いろん�
 
 # 作ったものと各種ライブラリバージョン
 
-@[stackblitz](https://stackblitz.com/edit/github-kzg6pu?embed=1&file=src/App.vue)
+@[stackblitz](https://stackblitz.com/edit/github-kzg6pu?embed=1&file=src/App.vue&view=preview)
 
 github: https://github.com/michihiko-karino/vue3-flash-message
 
@@ -33,7 +34,7 @@ typescript: 4.6.4
 
 作りましただけでは技術記事としてアレなので工夫点などを解説します。
 
-基本的なことばかりですが何かのためになれば幸いです。
+基本的なことばかりですが誰かのためになれば幸いです。
 
 
 ## `teleport`を使おう！
@@ -76,21 +77,21 @@ FlashMessageを各コンポーネントに使ってもらうために、メッ�
 
 https://github.com/michihiko-karino/vue3-flash-message/blob/main/src/composables/useMessage.ts#L15-L24
 
-FlashMessageを使う側のコンポーネントにはリアクティブ変数を参照されても困るので`Mutations`型
+FlashMessageを使う側のコンポーネントにはリアクティブ変数を参照されても困るので、メソッドだけが定義された`Mutations`型を使い、
 
 https://github.com/michihiko-karino/vue3-flash-message/blob/main/src/composables/useMessage.ts#L26-L34
 
-FlashMessageコンポーネント自体は、自分を表示する消すメソッドに関心がないので`MessageState`型
+FlashMessageコンポーネント自体は、自分を表示するor消すメソッドに関心がないので`MessageState`型を使います。
 
 https://github.com/michihiko-karino/vue3-flash-message/blob/main/src/components/FlashMessage.vue#L7
 
-という風にprovideされたもの全てを取り出すのではなく必要なものだけを渡すようにしましょう。
+こんな風にprovideされた値全てを取り出すのではなく必要なものだけにするといいでしょう。
 
 ### 注意: `provide`した値は`provide`したコンポーネント自身は`inject`できない
 
-`provide/inject`を多用すると事あるごとに辛いな〜と思う仕様にこのことがあります。
+`provide/inject`には辛いな〜と思う仕様があります。
 
-`provide/inject`のキーにSymbolが使えること、もしくはその値自身がある程度の **機能** をもつ場合、それらは別のモジュールとして定義したくなります。そして`provide`するだけのメソッドを定義したくなります。
+`provide/inject`のキーにSymbolが使えること、もしくはその値自身がある程度の **機能** をもつ場合、それらをまとめて別のモジュールとして定義したくなります。そして`provide`するだけのメソッドを定義したくなります。
 
 当然ですが`provide`するコンポーネント自体がその値を利用したい場合もあるでしょう。しかしながらモジュールの中で`provide`された場合コンポーネントは値への参照を失います。
 
@@ -134,7 +135,7 @@ https://github.com/michihiko-karino/vue3-flash-message/blob/main/test/components
 
 しかし`useMessage.ts`のようにVue実装でないモジュールに切り出してしまえばシンプルなSpecになりますし、セットアップも必要ありません。
 
-https://github.com/michihiko-karino/vue3-flash-message/blob/main/test/composables/useMessage.spec.ts#L3
+https://github.com/michihiko-karino/vue3-flash-message/blob/main/test/composables/useMessage.spec.ts
 
 網羅的なSpecはこちらで書き、コンポーネントのSpecでは代表的な例だけを検証すれば良さそうです。
 
